@@ -1,0 +1,29 @@
+{
+  "name": "我是题库王",
+  "short_name": "题库",
+  "description": "开刷",
+  "theme_color": "#39C5BB",
+  "icons": [
+    {
+      "src": "images/icon-128.png",
+      "type": "image/png",
+      "purpose": "any maskable",
+      "sizes": "128x128" 
+    },
+    {
+      "src": "images/icon-192.png",
+      "type": "image/png",
+      "purpose": "any maskable",
+      "sizes": "192x192" 
+    },
+    {
+      "src": "images/icon-512.png",
+      "type": "image/png",
+      "purpose": "any maskable",  
+      "sizes": "512x512" 
+    }
+  ],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#fff"
+}
