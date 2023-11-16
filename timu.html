@@ -8,21 +8,21 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache,must-revalidate">
     <meta http-equiv="Cache" content="no-cache">
-    <meta name="theme-color" content="#39C5BB"/>
+    <meta name="theme-color" content="#39C5BB" />
     <title>我是题库王</title>
     <link rel="stylesheet" href="./css/iview.css">
     <link rel="Icon" href="./images/icon-128.png" type="images/x-icon">
     <!-- manifest.json -->
     <link rel="manifest" href="/manifest.json">
 
-<!-- serviceworker.js -->
-<script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js');
-      });
-    }
-  </script>
+    <!-- serviceworker.js -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js');
+            });
+        }
+    </script>
     <style>
         body {
             line-height: 1.4rem;
@@ -131,6 +131,7 @@
             left: 0;
             right: 0;
             z-index: 999;
+            padding-bottom: 20px;
         }
     </style>
 </head>
@@ -189,6 +190,8 @@
                 timu: {},
                 zidian: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
                 daan: [],
+                touchStartX: 0,
+                touchEndX: 0,
                 answer: false,
                 result: false
             },
@@ -319,7 +322,34 @@
                     }
                     //错题乱序返回
                     return this.randomArray(result);
-                }
+                },
+                handleTouchStart(event) {
+                    this.touchStartX = event.changedTouches[0].screenX;
+                },
+                handleTouchEnd(event) {
+                    this.touchEndX = event.changedTouches[0].screenX;
+                    this.handleSwipeGesture();
+                },
+                handleSwipeGesture() {
+                    const threshold = 30; // 最小滑动距离，可以根据需要调整
+                    const direction = this.touchStartX - this.touchEndX;
+                    if (Math.abs(direction) > threshold) {
+                        if (direction > 0) {
+                            this.next();
+                        } else {
+                            this.prev();
+                        }
+                    }
+                },
+                handleKeyPress(event) {
+                    if (event.keyCode === 37) { // 左箭头键
+                        this.prev();
+                    } else if (event.keyCode === 39) { // 右箭头键
+                        this.next();
+                    } else if (event.keyCode === 32 && this.daan.length > 0) { // 空格键
+                        this.huida();
+                    }
+                },
             },
             created() {
                 this.fileName = sessionStorage.file
@@ -355,6 +385,16 @@
                     .catch(function (error) {
                         this.$Message.error('发生错误！');
                     });
+            },
+            mounted() {
+                // 添加触摸事件监听器
+                document.addEventListener('touchstart', this.handleTouchStart);
+                document.addEventListener('touchend', this.handleTouchEnd);
+                document.addEventListener('keydown', this.handleKeyPress);
+            },
+            beforeDestroy() {
+                // 在组件销毁前移除事件监听器
+                document.removeEventListener('keydown', this.handleKeyPress);
             }
         })
     </script>
