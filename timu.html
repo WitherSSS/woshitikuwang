@@ -180,7 +180,7 @@
                 </i-button>
                 <div class="auto-answer-toggle">
                     <label for="autoAnswerSwitch">单选自动回答</label>
-                    <i-switch v-model="autoAnswerEnabled" size="large" style="margin-left: 10px;"></i-switch>
+                    <i-switch v-model="autoAnswerEnabled" size="large" style="margin-left: 10px;" @change="toggleAutoAnswer"></i-switch>
                 </div>
                 <i-button type="primary" @click="next">
                     下一题
