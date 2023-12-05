@@ -8,21 +8,22 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache,must-revalidate">
     <meta http-equiv="Cache" content="no-cache">
-    <meta name="theme-color" content="#39C5BB"/>
+    <meta name="theme-color" content="#39C5BB" />
     <title>我是题库王</title>
     <link rel="stylesheet" href="./css/iview.css">
     <link rel="Icon" href="./images/icon-128.png" type="images/x-icon">
     <!-- manifest.json -->
     <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
-<!-- serviceworker.js -->
-<script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js');
-      });
-    }
-  </script>
+    <!-- serviceworker.js -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js');
+            });
+        }
+    </script>
 
     <style>
         .title {
@@ -44,6 +45,34 @@
             padding-right: 3.2vw;
             margin-bottom: 1.5vw;
         }
+
+        .refresh-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 120px;
+            height: 50px;
+            border-radius: 25px;
+            background-color: #ffffff;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            cursor: pointer;
+            padding-left: 20px;
+            font-size: 20px;
+            color: #333333;
+        }
+
+        .button-text {
+            margin-right: 5px;
+        }
+
+        .refresh-button:hover {
+            background-color: #f1f1f1;
+        }
     </style>
 </head>
 
@@ -59,6 +88,10 @@
 
         </div>
     </div>
+    <button id="refreshButton" class="refresh-button">
+        <span class="button-text">刷新</span>
+        <i class="fas fa-sync-alt"></i>
+    </button>
     <script src="./js/public.js?version=1.0"></script>
     <script src="./js/vue.min.js"></script>
     <script src="./js/iview.min.js"></script>
@@ -76,6 +109,17 @@
                 }
             }
         })
+    </script>
+    <script>
+        document.getElementById('refreshButton').addEventListener('click', function () {
+            caches.keys().then(keys => {
+                keys.forEach(key => {
+                    caches.delete(key);
+                });
+            });
+            // 强制刷新页面
+            window.location.reload(true);
+        });
     </script>
 </body>
 
