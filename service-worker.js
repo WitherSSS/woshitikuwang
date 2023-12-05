@@ -8,6 +8,9 @@ const urlsToCache = [
   '/css/fonts/ionicons.ttf',
   '/css/fonts/ionicons.woff',
   '/css/fonts/ionicons.woff2',
+  '/css/iview.css',
+  '/css/timu-dark.css',
+  '/css/timu-light.css',
   '/js/axios.min.js',
   '/js/iview.min.js',
   '/js/public.js',
@@ -16,9 +19,9 @@ const urlsToCache = [
   '/json/传统知识竞赛.json',
   '/json/廉洁初赛.json',
   '/json/安全等级.json',
-  './images/icon-192.png',
-  './images/icon-128.png',
-  './images/icon-512.png'
+  '/images/icon-192.png',
+  '/images/icon-128.png',
+  '/images/icon-512.png'
 ];
 
 

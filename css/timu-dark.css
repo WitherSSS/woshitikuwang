@@ -1,0 +1,71 @@
+body {
+  background-color: #1f1f1f;
+  color: #ffffff;
+}
+
+.process {
+  background-color: #1f1f1f;
+}
+
+.timu {
+  background-color: #1f1f1f;
+}
+
+.option div {
+  background-color: #333333;
+}
+
+.option .active {
+  background-color: #282828;
+}
+
+.huida {
+  background-color: #1f1f1f;
+}
+
+.result {
+  color: #ffffff;
+}
+
+.result.success {
+  border: 1px solid #8ce6b0;
+  background-color: #043d1d;
+}
+
+.result.warning {
+  border: 1px solid #ffd77a;
+  background-color: #4b3c04;
+}
+
+.result.info {
+  border: 1px solid #abdcff;
+  background-color: #0b2941;
+}
+
+.answer {
+  color: #ffffff;
+}
+
+.analysis {
+  color: #ffffff;
+}
+
+.pageControl {
+  color: #ffffff;
+}
+
+.ivu-card-head p {
+  color: #ffffff;
+}
+
+.ivu-message-notice-content-text {
+  color: #ffffff;
+}
+
+.footer-botton {
+  background-color: #1f1f1f;
+}
+
+.auto-answer-toggle {
+  color: #ffffff;
+}

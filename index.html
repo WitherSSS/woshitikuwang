@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +14,6 @@
     <!-- manifest.json -->
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-
     <!-- serviceworker.js -->
     <script>
         if ('serviceWorker' in navigator) {
@@ -24,28 +22,23 @@
             });
         }
     </script>
-
     <style>
         .title {
             text-align: center;
             margin-top: 2vw;
         }
-
         .timuList {
             width: 96vw;
             margin: 2vw auto 0;
         }
-
         .timu {
             margin-top: 2vw;
         }
-
         .author {
             text-align: right;
             padding-right: 3.2vw;
             margin-bottom: 1.5vw;
         }
-
         .refresh-button {
             position: fixed;
             bottom: 20px;
@@ -65,17 +58,14 @@
             font-size: 20px;
             color: #333333;
         }
-
         .button-text {
             margin-right: 5px;
         }
-
         .refresh-button:hover {
             background-color: #f1f1f1;
         }
     </style>
 </head>
-
 <body>
     <div id="el">
         <div class="timuList">
@@ -85,7 +75,6 @@
                     {{i.describe}}
                 </Card>
             </div>
-
         </div>
     </div>
     <button id="refreshButton" class="refresh-button">
@@ -122,5 +111,4 @@
         });
     </script>
 </body>
-
 </html>

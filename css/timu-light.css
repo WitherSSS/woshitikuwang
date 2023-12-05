@@ -1,0 +1,22 @@
+.option .active {
+    background-color: blanchedalmond;
+}
+
+.result {
+    color: #515a6e;
+}
+
+.result.success {
+    border: 1px solid #8ce6b0;
+    background-color: #edfff3;
+}
+
+.result.warning {
+    border: 1px solid #ffd77a;
+    background-color: #fff9e6;
+}
+
+.result.info {
+    border: 1px solid #abdcff;
+    background-color: #f0faff;
+}

@@ -11,10 +11,10 @@
     <meta name="theme-color" content="#39C5BB" />
     <title>我是题库王</title>
     <link rel="stylesheet" href="./css/iview.css">
+    <link id="css-link" rel="stylesheet" href="css/timu-light.css">
     <link rel="Icon" href="./images/icon-128.png" type="images/x-icon">
     <!-- manifest.json -->
     <link rel="manifest" href="/manifest.json">
-
     <!-- serviceworker.js -->
     <script>
         if ('serviceWorker' in navigator) {
@@ -23,133 +23,132 @@
             });
         }
     </script>
-    <style>
-        body {
-            line-height: 1.4rem;
-        }
-
-        .process {
-            width: 93.6vw;
-            display: block;
-            margin: 2vw auto 1vw;
-            font-size: 0.8rem;
-            letter-spacing: 0.1rem;
-        }
-
-        .timu {
-            width: 96vw;
-            margin: 2vw auto;
-        }
-
-        .option {
-            margin: 0 0 2vw;
-            line-height: 3.25rem;
-            letter-spacing: 0.1rem;
-        }
-
-        .option div {
-            padding: 0 2vw;
-            border-radius: 0.6vw;
-        }
-
-        .option .active {
-            background-color: blanchedalmond;
-        }
-
-        .type {
-            font-size: 0.6rem;
-            color: white;
-            border-radius: 15px;
-            padding: 0px 5px;
-            letter-spacing: 0.1rem;
-            text-indent: 0.2rem;
-            background-color: #1890ff;
-            display: inline-block;
-            margin-right: 6px;
-            line-height: 20px;
-        }
-
-        .huida {
-            width: 96vw;
-            height: 75px;
-            display: block;
-            margin: 4vw auto;
-        }
-
-        .result {
-            margin: 2vw 0 3vw;
-            position: relative;
-            padding: 8px 48px 8px 16px;
-            border-radius: 4px;
-            color: #515a6e;
-            font-size: 12px;
-            line-height: 16px;
-            margin-bottom: 10px;
-        }
-
-        .result.success {
-            border: 1px solid #8ce6b0;
-            background-color: #edfff3;
-        }
-
-        .result.warning {
-            border: 1px solid #ffd77a;
-            background-color: #fff9e6;
-        }
-
-        .result.info {
-            border: 1px solid #abdcff;
-            background-color: #f0faff;
-        }
-
-        .answer {
-            white-space: pre-line;
-        }
-
-        .analysis {
-            margin-top: 1vw;
-        }
-
-        .pageControl {
-            text-align: center;
-            display: block;
-            margin-top: 20px;
-        }
-
-        .ivu-card-head p {
-            overflow: inherit;
-            white-space: inherit;
-            line-height: 24px;
-        }
-
-        .ivu-message-notice-content-text {
-            display: block !important;
-        }
-
-        .footer-botton {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 999;
-            padding-bottom: 20px;
-        }
-
-        .flex-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .auto-answer-toggle {
-            margin: 0 5vw;
-        }
-    </style>
 </head>
+<style>
+    body {
+        line-height: 1.4rem;
+    }
+
+    .process {
+        width: 93.6vw;
+        display: block;
+        margin: 2vw auto 1vw;
+        font-size: 0.8rem;
+        letter-spacing: 0.1rem;
+    }
+
+    .timu {
+        width: 96vw;
+        margin: 2vw auto;
+    }
+
+    .option {
+        margin: 0 0 2vw;
+        line-height: 3rem;
+        letter-spacing: 0.1rem;
+    }
+
+    .option div {
+        padding: 0 2vw;
+        border-radius: 0.6vw;
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+
+    .type {
+        font-size: 0.6rem;
+        color: white;
+        border-radius: 15px;
+        padding: 0px 5px;
+        letter-spacing: 0.1rem;
+        text-indent: 0.2rem;
+        background-color: #1890ff;
+        display: inline-block;
+        margin-right: 6px;
+        line-height: 20px;
+    }
+
+    .huida {
+        width: 96vw;
+        height: 75px;
+        display: block;
+        margin: 4vw auto;
+    }
+
+    .result {
+        margin: 2vw 0 3vw;
+        position: relative;
+        padding: 8px 48px 8px 16px;
+        border-radius: 4px;
+        color: #515a6e;
+        font-size: 12px;
+        line-height: 16px;
+        margin-bottom: 10px;
+    }
+
+    .answer {
+        white-space: pre-line;
+    }
+
+    .analysis {
+        margin-top: 1vw;
+    }
+
+    .pageControl {
+        text-align: center;
+        display: block;
+        margin-top: 20px;
+    }
+
+    .ivu-card-head p {
+        overflow: inherit;
+        white-space: inherit;
+        line-height: 24px;
+    }
+
+    .ivu-message-notice-content-text {
+        display: block !important;
+    }
+
+    .footer-botton {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        padding-bottom: 20px;
+    }
+
+    .flex-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .auto-answer-toggle {
+        margin: 0 5vw;
+    }
+
+    .flex-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .process {
+        flex: 1;
+        margin-right: 10px;
+    }
+</style>
 
 <body>
     <div id="el">
-        <p class='process'>第{{page+1}}题，共{{data.length}}题</p>
+        <div class="flex-container">
+            <p class="process">第{{page+1}}题，共{{data.length}}题</p>
+            <div class="toggle_css">
+                <label>关灯</label>
+                <i-switch onclick="toggleCSS()"></i-switch>
+            </div>
+        </div>
         <Card class='timu'>
             <p slot="title">
                 <label class='type'
@@ -180,7 +179,8 @@
                 </i-button>
                 <div class="auto-answer-toggle">
                     <label for="autoAnswerSwitch">单选自动回答</label>
-                    <i-switch v-model="autoAnswerEnabled" size="large" style="margin-left: 10px;" @change="toggleAutoAnswer"></i-switch>
+                    <i-switch v-model="autoAnswerEnabled" size="large" style="margin-left: 10px;"
+                        @change="toggleAutoAnswer"></i-switch>
                 </div>
                 <i-button type="primary" @click="next">
                     下一题
@@ -192,6 +192,16 @@
             </i-button>
         </div>
     </div>
+    <script>
+        var cssLink = document.getElementById("css-link");
+        function toggleCSS() {
+            if (cssLink.href.endsWith("css/timu-light.css")) {
+                cssLink.href = "css/timu-dark.css";
+            } else {
+                cssLink.href = "css/timu-light.css";
+            }
+        }
+    </script>
     <script src="./js/public.js?version=1.0"></script>
     <script src="./js/vue.min.js"></script>
     <script src="./js/iview.min.js"></script>
@@ -220,9 +230,13 @@
                     } else {
                         //单选同时只能选一项
                         if (String(this.timu.answer).length === 1) {
-                            this.daan = [k];
-                            this.huida()
-                            return;
+                            if (this.autoAnswerEnabled === true) {
+                                this.daan = [k];
+                                this.huida()
+                                return;
+                            } else {
+                                this.daan = [];
+                            }
                         }
                         this.daan.push(k)
                     }
@@ -397,11 +411,9 @@
                         if (sessionStorage.type == "random") {
                             this.data = this.randomArray(this.data)
                         }
-
                         if (sessionStorage.type == "order" || sessionStorage.type == "recite") {
                             this.recovery(sessionStorage.type)
                         }
-
                         //初始化题目
                         this.initTimu();
                     })
