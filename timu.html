@@ -346,8 +346,10 @@ targetPage: ''
     if (event.key === 'Enter' && target >= 1 && target <= this.data.length) {
       this.page = target - 1;
       this.initTimu();
+      this.targetPage = '';
     } else if (event.key === 'Enter'){
           this.$Message.error('输入题号无效');
+this.targetPage = '';
     }
   },
 
