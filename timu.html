@@ -145,8 +145,7 @@
         <div class="flex-container">
             <p class="process">第{{page+1}}题，共{{data.length}}题</p>
 <div>
-  <input type="text" v-model="targetPage" placeholder="请输入题号">
-  <button @click="jumpToPage">跳转</button>
+  <input type="text" v-model="targetPage" placeholder="请输入题号" :class="{ faded: !targetPage }" @keyup="jumpToPage">
 </div>
             <div class="toggle_css">
                 <label>关灯</label>
@@ -341,13 +340,11 @@ targetPage: ''
                 },
   jumpToPage() {
     const target = parseInt(this.targetPage);
-    if (target >= 1 && target <= this.data.length) {
+    if (event.key === 'Enter' && target >= 1 && target <= this.data.length) {
       this.page = target - 1;
       this.initTimu();
     } else {
-      // 处理无效的题号输入，例如超出范围或非数字
           this.$Message.error('输入题号无效');
-      // 可以在这里显示错误提示或采取其他操作
     }
   },
 
