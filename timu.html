@@ -138,6 +138,9 @@
         flex: 1;
         margin-right: 10px;
     }
+.input-field {
+  width: 5ch;
+}
 </style>
 
 <body>
@@ -145,7 +148,7 @@
         <div class="flex-container">
             <p class="process">第{{page+1}}题，共{{data.length}}题</p>
 <div>
-  <input type="text" v-model="targetPage" placeholder="请输入题号" :class="{ faded: !targetPage }" @keyup="jumpToPage">
+  <input type="text" v-model="targetPage" placeholder="跳转" :class="{ faded: !targetPage }" @keyup="jumpToPage" class="input-field">
 </div>
             <div class="toggle_css">
                 <label>关灯</label>
@@ -343,7 +346,7 @@ targetPage: ''
     if (event.key === 'Enter' && target >= 1 && target <= this.data.length) {
       this.page = target - 1;
       this.initTimu();
-    } else {
+    } else if (event.key === 'Enter'){
           this.$Message.error('输入题号无效');
     }
   },
