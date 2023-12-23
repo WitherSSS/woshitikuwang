@@ -138,12 +138,18 @@
         flex: 1;
         margin-right: 10px;
     }
+.input-field {
+  width: 8ch;
+}
 </style>
 
 <body>
     <div id="el">
         <div class="flex-container">
             <p class="process">第{{page+1}}题，共{{data.length}}题</p>
+<div>
+  <input type="text" v-model="targetPage" placeholder="跳转" :class="{ faded: !targetPage }" @keyup="jumpToPage" class="input-field">
+</div>
             <div class="toggle_css">
                 <label>关灯</label>
                 <i-switch onclick="toggleCSS()"></i-switch>
@@ -221,7 +227,8 @@
                 touchEndX: 0,
                 answer: false,
                 result: false,
-                autoAnswerEnabled: false
+                autoAnswerEnabled: false,
+targetPage: ''
             },
             methods: {
                 select(k) {
@@ -334,6 +341,16 @@
                         localStorage['recite_' + this.fileId] = this.page
                     }
                 },
+  jumpToPage() {
+    const target = parseInt(this.targetPage);
+    if (event.key === 'Enter' && target >= 1 && target <= this.data.length) {
+      this.page = target - 1;
+      this.initTimu();
+    } else if (event.key === 'Enter'){
+          this.$Message.error('输入题号无效');
+    }
+  },
+
                 //打乱数组顺序
                 randomArray(array) {
                     var m = array.length,
