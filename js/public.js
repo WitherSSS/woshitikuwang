@@ -4,4 +4,5 @@ const JSONList = [
     {id: "000004", name: '安全等级一级', describe: '安全等级一级', file: "安全等级.json"   },
     {id: "000003", name: '传统知识竞赛', describe: '传统知识竞赛', file: "传统知识竞赛.json"   },
     {id: "000005", name: '高处作业', describe: '特种高处作业2022版题库', file: "高处.json"   },
+    {id: "000006", name: '继电保护员', describe: '（浙江）2024高级工及以下等级（继电保护员）专业知识考试自测联系', file: "继电保护2024.json"   },
 ]

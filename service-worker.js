@@ -20,6 +20,7 @@ const urlsToCache = [
   '/json/廉洁初赛.json',
   '/json/安全等级.json',
   '/json/高处.json',
+  '/json/继电保护2024.json',
   '/images/icon-192.png',
   '/images/icon-128.png',
   '/images/icon-512.png'
