@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,30 +8,32 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache,must-revalidate">
     <meta http-equiv="Cache" content="no-cache">
-    <meta name="theme-color" content="#39C5BB"/>
+    <meta name="theme-color" content="#39C5BB" />
     <title>答题类型选择</title>
     <link rel="stylesheet" href="./css/iview.css" type="text/css">
     <link rel="Icon" href="./images/icon-128.png" type="images/x-icon">
     <!-- manifest.json -->
     <link rel="manifest" href="/manifest.json">
-    <!--script>
+    <script>
         if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/service-worker.js');
-          });
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js');
+            });
         }
-      </！script-->
-    
+    </script>
+
     <style>
         .typeList {
             width: 95vw;
             margin: 2vw auto;
         }
+
         .typeList>div {
             margin-top: 2vw;
         }
     </style>
 </head>
+
 <body>
     <div id="el">
         <p style="margin-left:3vw;margin-top: 3vw;font-size: 0.9rem;">请选择答题模式：</p>
@@ -71,4 +74,5 @@
         })
     </script>
 </body>
+
 </html>
