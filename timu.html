@@ -11,23 +11,30 @@
     <meta name="theme-color" content="#39C5BB" />
     <title>我是题库王</title>
     <link rel="stylesheet" href="./css/iview.css">
-    <link id="css-link" rel="stylesheet" href="css/timu-light.css">
+    <link id="css-link" rel="stylesheet" href="css/timu.css">
     <link rel="Icon" href="./images/icon-128.png" type="images/x-icon">
     <!-- manifest.json -->
     <link rel="manifest" href="/manifest.json">
     <!-- serviceworker.js -->
-    <script>
+    <!--script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js');
             });
         }
-    </script>
+    </script-->
 </head>
 <style>
     body {
         line-height: 1.4rem;
     }
+
+    body.dark-mode {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+
+
 
     .process {
         width: 93.6vw;
@@ -62,7 +69,7 @@
         padding: 0px 5px;
         letter-spacing: 0.1rem;
         text-indent: 0.2rem;
-        background-color: #1890ff;
+        background-color: #39C5BBC0;
         display: inline-block;
         margin-right: 6px;
         line-height: 20px;
@@ -106,8 +113,31 @@
         line-height: 24px;
     }
 
+    body.dark-mode .ivu-card-head,
+    body.dark-mode .ivu-card-body {
+        background-color: #333;
+
+    }
+
+    body.dark-mode .ivu-card-head p,
+    body.dark-mode .ivu-card-body p {
+
+        color: #fff;
+    }
+
+
     .ivu-message-notice-content-text {
         display: block !important;
+    }
+
+    .input-field.faded {
+        background-color: #ffffff;
+        color: #333;
+    }
+
+    body.dark-mode .input-field.faded {
+        background-color: #555;
+        color: #fff;
     }
 
     .footer-botton {
@@ -117,12 +147,50 @@
         right: 0;
         z-index: 999;
         padding-bottom: 20px;
+        opacity: 0.8;
     }
 
-    .flex-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    body.dark-mode .menu-btn {
+        background-color: #555;
+        color: #fff;
+    }
+
+    body.dark-mode .menu-btn {
+        background-color: #555;
+        color: #fff;
+    }
+
+    .active {
+        background-color: #39c5bb80;
+    }
+
+    body.dark-mode .active {
+        background-color: #39c5bc80;
+    }
+
+    .ivu-switch-checked {
+        background-color: #39c5bb;
+    }
+
+    .hidden-menu {
+        background-color: #ffffff;
+    }
+
+    body.dark-mode .hidden-menu {
+        background-color: #555;
+    }
+
+    body.dark-mode .warning {
+        background-color: #39c5bb80;
+        color: #e0e0e0
+    }
+
+    .ivu-btn-primary {
+        background-color: #39c5bb80;
+    }
+
+    .ivu-btn-success {
+        background-color: #028c0080;
     }
 
     .auto-answer-toggle {
@@ -131,6 +199,7 @@
 
     .flex-container {
         display: flex;
+        justify-content: space-between;
         align-items: center;
     }
 
@@ -138,21 +207,107 @@
         flex: 1;
         margin-right: 10px;
     }
-.input-field {
-  width: 8ch;
-}
+
+    .input-field {
+        width: 8ch;
+    }
+
+    .menu-button {
+        display: flex;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px 0;
+    }
+
+    .menu-icon {
+        width: 30px;
+        height: 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    .menu-label {
+        margin-right: 10px;
+        font-size: 14px;
+    }
+
+    i-switch {
+        flex-grow: 1;
+        text-align: right;
+    }
+
+    .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+    }
+
+    .bar {
+        width: 100%;
+        height: 4px;
+        background-color: #39C5BB;
+        border-radius: 5px;
+    }
+
+    .hidden-menu {
+        display: none;
+        position: absolute;
+        top: 40px;
+        right: 0;
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 200px;
+        z-index: 9999;
+    }
+
+    .menu-button .hidden-menu {
+        display: block;
+    }
 </style>
 
 <body>
     <div id="el">
         <div class="flex-container">
-            <p class="process">第{{page+1}}题，共{{data.length}}题</p>
-<div>
-  <input type="text" v-model="targetPage" placeholder="跳转" :class="{ faded: !targetPage }" @keyup="jumpToPage" class="input-field">
-</div>
-            <div class="toggle_css">
-                <label>关灯</label>
-                <i-switch onclick="toggleCSS()"></i-switch>
+            <p class="process">第{{page + 1}}题，共{{data.length}}题</p>
+            <div>
+                <input type="text" v-model="targetPage" placeholder="跳转" :class="{ faded: !targetPage }"
+                    @keyup="jumpToPage" class="input-field">
+            </div>
+
+            <div class="menu-button">
+                <div @click="toggleMenu" class="menu-icon">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <div v-if="menuVisible" class="hidden-menu">
+                    <div class="menu-item">
+                        <label class="menu-label">暗黑模式</label>
+                        <i-switch :value="darkMode" size="large" @on-change="toggleDarkMode"></i-switch>
+                    </div>
+                    <div class="menu-item">
+                        <label class="menu-label">单选自动回答</label>
+                        <i-switch v-model="autoAnswerEnabled" size="large" @change="toggleAutoAnswer"></i-switch>
+                    </div>
+                    <div class="navigation-buttons">
+                        <i-button @click="prev" class=menu-btn>上一题</i-button>
+                        <i-button @click="next" class=menu-btn>下一题</i-button>
+                    </div>
+                    <i-button class=menu-btn v-if="sessionStorage.type === 'wrong'"
+                        @click="deleteAllWrong">删除全部错题</i-button>
+
+                </div>
             </div>
         </div>
         <Card class='timu'>
@@ -174,40 +329,18 @@
             </div>
             <div v-if='answer' class="answer">答案：{{timu.answer}}</div>
             <div v-if='answer' class="analysis">解析：{{timu.analysis?timu.analysis:'该答案暂无解析'}}</div>
+            <br><br><br><br><br><br><br><br><br>
         </Card>
         <div class="footer-botton">
             <i-button class="huida" type="primary" :disabled="daan.length === 0" @click="huida" size="large" long>
                 确定答案
             </i-button>
-            <div class="flex-container">
-                <i-button type="primary" @click="prev">
-                    上一题
-                </i-button>
-                <div class="auto-answer-toggle">
-                    <label for="autoAnswerSwitch">单选自动回答</label>
-                    <i-switch v-model="autoAnswerEnabled" size="large" style="margin-left: 10px;"
-                        @change="toggleAutoAnswer"></i-switch>
-                </div>
-                <i-button type="primary" @click="next">
-                    下一题
-                </i-button>
-            </div>
             <i-button class="huida" type="success" v-if="sessionStorage.type === 'wrong'" @click="del" size="large"
                 long>
                 我已学会，不再显示
             </i-button>
         </div>
     </div>
-    <script>
-        var cssLink = document.getElementById("css-link");
-        function toggleCSS() {
-            if (cssLink.href.endsWith("css/timu-light.css")) {
-                cssLink.href = "css/timu-dark.css";
-            } else {
-                cssLink.href = "css/timu-light.css";
-            }
-        }
-    </script>
     <script src="./js/public.js?version=1.0"></script>
     <script src="./js/vue.min.js"></script>
     <script src="./js/iview.min.js"></script>
@@ -228,7 +361,9 @@
                 answer: false,
                 result: false,
                 autoAnswerEnabled: false,
-targetPage: ''
+                menuVisible: false,
+                darkMode: false,
+                targetPage: ''
             },
             methods: {
                 select(k) {
@@ -247,6 +382,9 @@ targetPage: ''
                         }
                         this.daan.push(k)
                     }
+                },
+                toggleMenu() {
+                    this.menuVisible = !this.menuVisible;
                 },
                 toggleAutoAnswer() {
                     this.autoAnswerEnabled = !this.autoAnswerEnabled;
@@ -317,6 +455,14 @@ targetPage: ''
                         this.initTimu()
                     }
                 },
+                enableWrongMode() {
+                    sessionStorage.type = "wrong";  // 启用错题模式
+                    window.location.reload();
+                },
+                deleteAllWrong() {
+                    localStorage.removeItem("wrong_" + this.fileId);  // 删除所有错题记录
+                    this.$Message.success('已清除所有错题记录');
+                },
                 initTimu() { //题目控制
                     //对之前的记录清空
                     this.daan = [];
@@ -341,17 +487,17 @@ targetPage: ''
                         localStorage['recite_' + this.fileId] = this.page
                     }
                 },
-  jumpToPage() {
-    const target = parseInt(this.targetPage);
-    if (event.key === 'Enter' && target >= 1 && target <= this.data.length) {
-      this.page = target - 1;
-      this.initTimu();
-      this.targetPage = '';
-    } else if (event.key === 'Enter'){
-          this.$Message.error('输入题号无效');
-this.targetPage = '';
-    }
-  },
+                jumpToPage() {
+                    const target = parseInt(this.targetPage);
+                    if (event.key === 'Enter' && target >= 1 && target <= this.data.length) {
+                        this.page = target - 1;
+                        this.initTimu();
+                        this.targetPage = '';
+                    } else if (event.key === 'Enter') {
+                        this.$Message.error('输入题号无效');
+                        this.targetPage = '';
+                    }
+                },
 
                 //打乱数组顺序
                 randomArray(array) {
@@ -406,10 +552,34 @@ this.targetPage = '';
                         this.huida();
                     }
                 },
+                checkSystemTheme() {
+                    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+                    if (prefersDarkScheme.matches) {
+                        this.setDarkMode(true);
+                    } else {
+                        this.setDarkMode(false);
+                    }
+                },
+
+                // 设置暗黑模式
+                setDarkMode(isDark) {
+                    this.darkMode = isDark;
+                    if (this.darkMode) {
+                        document.body.classList.add('dark-mode');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                    }
+                },
+
+                // 切换暗黑模式
+                toggleDarkMode() {
+                    this.setDarkMode(!this.darkMode);
+                },
             },
             created() {
                 this.fileName = sessionStorage.file
                 this.fileId = sessionStorage.id
+                this.checkSystemTheme();
                 if (!this.fileName) {
                     window.location.href = "./index.html"
                 }
@@ -445,6 +615,8 @@ this.targetPage = '';
                 document.addEventListener('touchstart', this.handleTouchStart);
                 document.addEventListener('touchend', this.handleTouchEnd);
                 document.addEventListener('keydown', this.handleKeyPress);
+                const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+                prefersDarkScheme.addEventListener('change', () => this.checkSystemTheme());
             },
             beforeDestroy() {
                 // 在组件销毁前移除事件监听器
