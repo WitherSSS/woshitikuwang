@@ -22,6 +22,7 @@ const urlsToCache = [
   '/json/高处.json',
   '/json/继电保护2024.json',
   '/json/20241.11.json',
+  '/json/8二次回路.json',
   '/images/icon-192.png',
   '/images/icon-128.png',
   '/images/icon-512.png'
