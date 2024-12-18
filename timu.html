@@ -332,7 +332,7 @@
             <br><br><br><br><br><br><br><br><br>
         </Card>
         <div class="footer-botton">
-            <i-button class="huida" type="primary" :disabled="daan.length === 0" @click="huida" size="large" long>
+            <i-button class="huida" type="primary" :disabled="daan.length === 0 && !!vue.timu.option" @click="huida" size="large" long>
                 确定答案
             </i-button>
             <i-button class="huida" type="success" v-if="sessionStorage.type === 'wrong'" @click="del" size="large"
@@ -390,6 +390,11 @@
                     this.autoAnswerEnabled = !this.autoAnswerEnabled;
                 },
                 huida() {
+                    if (this.timu.option) {
+                        this.result = 0;
+                        this.answer = true;
+                        return;
+                    }
                     let answer = this.timu.answer.split('')
                     this.result = 1;
                     if (this.daan.length != answer.length) {
@@ -470,10 +475,10 @@
                     //新题目
                     this.timu = this.data[this.page];
                     //简答题直接显示解析和答案
-                    if (this.timu.option.length == 0) {
-                        this.answer = true;
-                        this.result = 2;
-                    }
+                    //if (this.timu.option.length == 0) {
+                    //    this.answer = true;
+                    //    this.result = 2;
+                    //}
                     //背题模式直接显示解析和答案
                     if (sessionStorage.type == "recite") {
                         this.answer = true;
