@@ -390,7 +390,7 @@
                     this.autoAnswerEnabled = !this.autoAnswerEnabled;
                 },
                 huida() {
-                    if (this.timu.option) {
+                    if (!this.timu.option) {
                         this.result = 0;
                         this.answer = true;
                         return;
