@@ -332,7 +332,8 @@
             <br><br><br><br><br><br><br><br><br>
         </Card>
         <div class="footer-botton">
-            <i-button class="huida" type="primary" :disabled="daan.length === 0 && !!vue.timu.option" @click="huida" size="large" long>
+            <i-button class="huida" type="primary" :disabled="daan.length === 0 && vue.timu.option === 0" @click="huida"
+                size="large" long>
                 确定答案
             </i-button>
             <i-button class="huida" type="success" v-if="sessionStorage.type === 'wrong'" @click="del" size="large"
@@ -390,7 +391,7 @@
                     this.autoAnswerEnabled = !this.autoAnswerEnabled;
                 },
                 huida() {
-                    if (!this.timu.option) {
+                    if (this.timu.option.length === 0 ) {
                         this.result = 0;
                         this.answer = true;
                         return;
@@ -549,11 +550,30 @@
                     }
                 },
                 handleKeyPress(event) {
-                    if (event.keyCode === 37) { // 左箭头键
+                    const key = event.key.toLowerCase(); // 获取按键并转为小写
+                    const optionKeys = ['1', '2', '3', '4', '5', '6', '7', '8', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']; // 可选的键
+                    const optionMap = {
+                        '1': 0, 'a': 0,
+                        '2': 1, 'b': 1,
+                        '3': 2, 'c': 2,
+                        '4': 3, 'd': 3,
+                        '5': 4, 'e': 4,
+                        '6': 5, 'f': 5,
+                        '7': 6, 'g': 6,
+                        '8': 7, 'h': 7
+                    };
+
+                    // 如果按键是选项键，则选择相应的选项
+                    if (optionKeys.includes(key)) {
+                        const index = optionMap[key]; // 获取对应选项的索引
+                        if (this.timu.option && index < this.timu.option.length) {
+                            this.select(index);  // 选择选项
+                        }
+                    } else if (event.keyCode === 37) { // 左箭头键
                         this.prev();
                     } else if (event.keyCode === 39) { // 右箭头键
                         this.next();
-                    } else if (event.keyCode === 32 && this.daan.length > 0) { // 空格键
+                    } else if ((event.keyCode === 13 || event.keyCode === 32 )&& this.daan.length > 0) { // 空格键
                         this.huida();
                     }
                 },
