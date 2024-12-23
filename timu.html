@@ -306,7 +306,11 @@
                     </div>
                     <i-button class=menu-btn v-if="sessionStorage.type === 'wrong'"
                         @click="deleteAllWrong">删除全部错题</i-button>
-
+                    <div class="menu-item">
+                        <label class="menu-label">导入导出错题</label>
+                        <input v-model="wrongQuestions" class="input-field" placeholder="错题Array"
+                            @input="syncWrongQuestions" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -364,7 +368,8 @@
                 autoAnswerEnabled: true,
                 menuVisible: false,
                 darkMode: false,
-                targetPage: ''
+                targetPage: '',
+                wrongQuestions: ''
             },
             methods: {
                 select(k) {
@@ -391,7 +396,7 @@
                     this.autoAnswerEnabled = !this.autoAnswerEnabled;
                 },
                 huida() {
-                    if (this.timu.option.length === 0 ) {
+                    if (this.timu.option.length === 0) {
                         this.result = 0;
                         this.answer = true;
                         return;
@@ -422,6 +427,7 @@
                             wrong.push(this.timu.id)
                             localStorage["wrong_" + this.fileId] = JSON.stringify(wrong)
                         }
+                        this.wrongQuestions = localStorage["wrong_" + this.fileId]
                     }
                     this.answer = true;
                 },
@@ -573,7 +579,7 @@
                         this.prev();
                     } else if (event.keyCode === 39) { // 右箭头键
                         this.next();
-                    } else if ((event.keyCode === 13 || event.keyCode === 32 )&& this.daan.length > 0) { // 空格键
+                    } else if ((event.keyCode === 13 || event.keyCode === 32) && this.daan.length > 0) { // 空格键
                         this.huida();
                     }
                 },
@@ -585,7 +591,12 @@
                         this.setDarkMode(false);
                     }
                 },
-
+                syncWrongQuestions() {
+                    // 如果有错题记录，则更新localStorage
+                    if (this.wrongQuestions) {
+                        localStorage["wrong_" + this.fileId] = this.wrongQuestions;
+                    }
+                },
                 // 设置暗黑模式
                 setDarkMode(isDark) {
                     this.darkMode = isDark;
@@ -605,6 +616,10 @@
                 this.fileName = sessionStorage.file
                 this.fileId = sessionStorage.id
                 this.checkSystemTheme();
+                if (localStorage["wrong_" + this.fileId]) {
+                    this.wrongQuestions = localStorage["wrong_" + this.fileId];
+                }
+
                 if (!this.fileName) {
                     window.location.href = "./index.html"
                 }
