@@ -545,7 +545,7 @@
                     this.handleSwipeGesture();
                 },
                 handleSwipeGesture() {
-                    const threshold = 30; // 最小滑动距离，可以根据需要调整
+                    const threshold = 50; // 最小滑动距离，可以根据需要调整
                     const direction = this.touchStartX - this.touchEndX;
                     if (Math.abs(direction) > threshold) {
                         if (direction > 0) {
