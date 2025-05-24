@@ -18,10 +18,12 @@ const urlsToCache = [
   '/json/传统知识竞赛.json',
   '/json/廉洁初赛.json',
   '/json/安全等级.json',
+  '/json/安全等级二级.json',
   '/json/高处.json',
   '/json/继电保护2024.json',
   '/json/2024.11.json',
   '/json/2024.12.24.json',
+  '/json/20250520.json',
   '/images/icon-192.png',
   '/images/icon-128.png',
   '/images/icon-512.png'
