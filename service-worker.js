@@ -24,6 +24,7 @@ const urlsToCache = [
   '/json/2024.11.json',
   '/json/2024.12.24.json',
   '/json/20250520.json',
+  '/json/继电保护高级工.json',
   '/images/icon-192.png',
   '/images/icon-128.png',
   '/images/icon-512.png'
