@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel 题目转换器 (多表合并版)</title>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: #1e293b;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        h1 { text-align: center; color: var(--primary); margin-bottom: 30px; font-weight: 800; }
+        .section {
+            margin-bottom: 24px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fafafa;
+        }
+        .section-title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: block;
+            color: #475569;
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+        }
+        input[type="file"] {
+            width: 100%;
+            padding: 20px;
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        input[type="file"]:hover { border-color: var(--primary); }
+        .sheet-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .sheet-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .mapping-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: #64748b; }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+        }
+        .multi-select { height: 150px; }
+        button {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.1s;
+        }
+        button:active { transform: scale(0.98); }
+        .info-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+        .info-success { background: #dcfce7; color: #166534; display: block; }
+        .help-text { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Excel To JSON Converter</h1>
+
+    <div class="section">
+        <span class="section-title">1. 上传文件</span>
+        <input type="file" id="fileInput" accept=".xlsx, .xls" />
+    </div>
+
+    <div id="appBody" style="display: none;">
+        <div class="section">
+            <span class="section-title">2. 选择参与合并的工作表 (Sheet)</span>
+            <div id="sheetList" class="sheet-selector"></div>
+            <div class="help-text">勾选后，下方的映射列表将自动更新包含该表的所有列名。</div>
+        </div>
+
+        <div class="section">
+            <span class="section-title">3. 设置字段映射</span>
+            <div class="mapping-grid">
+                <div>
+                    <label>题目内容 (Title):</label>
+                    <select id="mapTitle" class="map-input"></select>
+                </div>
+                <div>
+                    <label>正确答案 (Answer):</label>
+                    <select id="mapAnswer" class="map-input"></select>
+                </div>
+                <div>
+                    <label>解析内容 (Analysis):</label>
+                    <select id="mapAnalysis" class="map-input"></select>
+                </div>
+                <div>
+                    <label>选项列 (Option) - 可多选:</label>
+                    <select id="mapOptions" class="multi-select map-input" multiple></select>
+                    <div class="help-text">按住 Ctrl/Cmd 键点击进行多选</div>
+                </div>
+            </div>
+        </div>
+
+        <button id="exportBtn">开始合并并导出 JSON</button>
+    </div>
+
+    <div id="statusBox" class="info-box"></div>
+</div>
+
+<script>
+    let workbook = null;
+    let allUniqueHeaders = [];
+
+    const fileInput = document.getElementById('fileInput');
+    const appBody = document.getElementById('appBody');
+    const sheetList = document.getElementById('sheetList');
+    const exportBtn = document.getElementById('exportBtn');
+    const statusBox = document.getElementById('statusBox');
+
+    // 映射元素
+    const mapTitle = document.getElementById('mapTitle');
+    const mapAnswer = document.getElementById('mapAnswer');
+    const mapAnalysis = document.getElementById('mapAnalysis');
+    const mapOptions = document.getElementById('mapOptions');
+
+    fileInput.addEventListener('change', handleFile);
+
+    async function handleFile(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const data = await file.arrayBuffer();
+        workbook = XLSX.read(data);
+        
+        renderSheetList();
+        updateHeadersAndSelects();
+        appBody.style.display = 'block';
+    }
+
+    function renderSheetList() {
+        sheetList.innerHTML = '';
+        workbook.SheetNames.forEach(name => {
+            const label = document.createElement('label');
+            label.className = 'sheet-item';
+            label.innerHTML = `<input type="checkbox" value="${name}" checked onchange="updateHeadersAndSelects()"> ${name}`;
+            sheetList.appendChild(label);
+        });
+    }
+
+    // 核心改进：扫描所有选中 Sheet 的表头并取并集
+    function updateHeadersAndSelects() {
+        const selectedSheets = Array.from(sheetList.querySelectorAll('input:checked')).map(i => i.value);
+        const headerSet = new Set();
+
+        selectedSheets.forEach(name => {
+            const sheet = workbook.Sheets[name];
+            if (!sheet['!ref']) return;
+            
+            // 读取第一行作为表头
+            const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+            if (json.length > 0) {
+                json[0].forEach(h => {
+                    if (h) headerSet.add(h.toString().trim());
+                });
+            }
+        });
+
+        allUniqueHeaders = Array.from(headerSet);
+        
+        // 更新所有下拉框
+        const selects = [mapTitle, mapAnswer, mapAnalysis, mapOptions];
+        selects.forEach(s => {
+            const currentVal = Array.from(s.selectedOptions).map(o => o.value);
+            s.innerHTML = '';
+            allUniqueHeaders.forEach(h => {
+                const opt = document.createElement('option');
+                opt.value = h;
+                opt.textContent = h;
+                if (currentVal.includes(h)) opt.selected = true;
+                s.appendChild(opt);
+            });
+        });
+    }
+
+    exportBtn.addEventListener('click', () => {
+        const selectedSheets = Array.from(sheetList.querySelectorAll('input:checked')).map(i => i.value);
+        if (selectedSheets.length === 0) return alert('请先选择工作表');
+
+        const config = {
+            title: mapTitle.value,
+            answer: mapAnswer.value,
+            analysis: mapAnalysis.value,
+            options: Array.from(mapOptions.selectedOptions).map(o => o.value)
+        };
+
+        let result = [];
+        let idCounter = 1;
+
+        selectedSheets.forEach(name => {
+            const sheet = workbook.Sheets[name];
+            // 获取带表头的 JSON
+            const data = XLSX.utils.sheet_to_json(sheet);
+
+            data.forEach(row => {
+                // 生成 6 位以内 ID
+                const idStr = idCounter.toString().padStart(6, '0');
+                
+                const item = {
+                    id: idStr,
+                    title: (row[config.title] || "").toString().trim(),
+                    option: config.options.map(optKey => (row[optKey] || "").toString().trim()).filter(v => v !== ""),
+                    answer: (row[config.answer] || "").toString().trim(),
+                    analysis: (row[config.analysis] || "").toString().trim()
+                };
+
+                // 只有题目不为空才加入
+                if (item.title) {
+                    result.push(item);
+                    idCounter++;
+                }
+            });
+        });
+
+        downloadJson(result);
+        
+        statusBox.className = 'info-box info-success';
+        statusBox.textContent = `转换成功！已合并 ${selectedSheets.length} 个工作表，共处理 ${result.length} 条题目数据。`;
+    });
+
+    function downloadJson(data) {
+        const blob = new Blob([JSON.stringify(data, null, 4)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `converted_data_${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+</script>
+
+</body>
+</html>
+
