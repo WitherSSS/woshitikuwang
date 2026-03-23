@@ -3,48 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel 题目 JSON 转换器</title>
-    <!-- 引入 SheetJS 库 -->
+    <title>Excel 题目转换工具 v1.2.0</title>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
     <style>
         :root {
-            --primary: #2563eb;
+            --primary: #4f46e5;
             --bg: #f8fafc;
             --card: #ffffff;
             --text: #1e293b;
             --border: #e2e8f0;
         }
         body {
-            font-family: -apple-system, system-ui, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
             padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
         }
         .container {
             width: 100%;
-            max-width: 850px;
+            max-width: 900px;
             background: var(--card);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
-        h1 { text-align: center; color: var(--primary); margin-bottom: 25px; }
+        h1 { text-align: center; color: var(--primary); margin-bottom: 30px; font-size: 24px; }
         .section {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             padding: 20px;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             background: #fff;
         }
         .section-title {
             font-weight: bold;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             display: block;
-            border-left: 4px solid var(--primary);
-            padding-left: 10px;
+            border-left: 5px solid var(--primary);
+            padding-left: 12px;
+            color: #334155;
         }
         input[type="file"] {
             width: 100%;
@@ -53,89 +54,113 @@
             border-radius: 8px;
             cursor: pointer;
             text-align: center;
+            box-sizing: border-box;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
         }
         .sheet-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
         }
         .sheet-item {
             display: flex;
             align-items: center;
             background: #f1f5f9;
-            padding: 6px 12px;
-            border-radius: 6px;
+            padding: 8px 12px;
+            border-radius: 8px;
             font-size: 14px;
+            cursor: pointer;
         }
-        .sheet-item input { margin-right: 8px; }
+        .sheet-item input { margin-right: 10px; }
         .mapping-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 20px;
         }
-        label { display: block; margin-bottom: 5px; font-size: 13px; color: #64748b; font-weight: 600; }
+        label { display: block; margin-bottom: 6px; font-size: 13px; color: #64748b; font-weight: 600; }
         select {
             width: 100%;
             padding: 10px;
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 8px;
             background: white;
             font-size: 14px;
         }
-        .multi-select { height: 140px; }
+        .multi-select { height: 160px; }
         button {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             background-color: var(--primary);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 15px;
+            transition: all 0.2s;
+            margin-top: 20px;
         }
-        button:hover { background: #1d4ed8; }
+        button:hover { background: #4338ca; transform: translateY(-1px); }
         .status {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 6px;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
             text-align: center;
             display: none;
         }
-        .status.active { display: block; background: #dcfce7; color: #166534; }
-        .hint { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+        .status.active { display: block; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .hint { font-size: 12px; color: #94a3b8; margin-top: 6px; }
+        footer {
+            margin-top: 40px;
+            color: #94a3b8;
+            font-size: 12px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Excel 转题目 JSON</h1>
+    <h1>Excel 题目 JSON 转换器</h1>
 
-    <!-- 1. 上传文件 -->
+    <!-- 1. 文件上传 -->
     <div class="section">
         <span class="section-title">1. 选择 Excel 文件</span>
         <input type="file" id="fileInput" accept=".xlsx, .xls" />
     </div>
 
-    <div id="setup" style="display: none;">
-        <!-- 2. 工作表选择 -->
+    <div id="mainUI" style="display: none;">
+        <!-- 2. 题库基本信息 -->
         <div class="section">
-            <span class="section-title">2. 选择要处理的工作表</span>
+            <span class="section-title">2. 题库设置</span>
+            <label>题库唯一标识 (Bank ID):</label>
+            <input type="text" id="bankId" placeholder="例如: BK_2023_001 (留空则自动生成)">
+            <div class="hint">该 ID 将会包含在每个题目对象的 bank_id 字段中。</div>
+        </div>
+
+        <!-- 3. 工作表选择 -->
+        <div class="section">
+            <span class="section-title">3. 选择要合并的工作表</span>
             <div id="sheetList" class="sheet-list"></div>
         </div>
 
-        <!-- 3. 列映射 -->
+        <!-- 4. 列映射 -->
         <div class="section">
-            <span class="section-title">3. 配置字段映射</span>
+            <span class="section-title">4. 配置映射关系</span>
             <div class="mapping-grid">
                 <div>
                     <label>题目 (Title):</label>
                     <select id="mapTitle"></select>
                 </div>
                 <div>
-                    <label>答案 (Answer):</label>
+                    <label>标准答案 (Answer):</label>
                     <select id="mapAnswer"></select>
                 </div>
                 <div>
@@ -143,50 +168,59 @@
                     <select id="mapAnalysis"></select>
                 </div>
                 <div>
-                    <label>选项列 (Option) - 可多选:</label>
+                    <label>选项列 (Options) - 可多选:</label>
                     <select id="mapOptions" class="multi-select" multiple></select>
-                    <div class="hint">按住 Ctrl 或 Command 进行多选</div>
+                    <div class="hint">按住 Ctrl (Win) 或 Cmd (Mac) 多选</div>
                 </div>
             </div>
         </div>
 
-        <button id="convertBtn">开始转换并下载 JSON</button>
+        <button id="convertBtn">合并数据并导出 JSON</button>
     </div>
 
     <div id="status" class="status"></div>
 </div>
 
+<footer>
+    <div>© 2024 Excel To JSON Processor</div>
+    <div style="margin-top: 5px; font-weight: bold;">Version: 1.2.0</div>
+</footer>
+
 <script>
-    let workbook = null;
+    let wb = null;
     const fileInput = document.getElementById('fileInput');
-    const setup = document.getElementById('setup');
+    const mainUI = document.getElementById('mainUI');
     const sheetList = document.getElementById('sheetList');
     const convertBtn = document.getElementById('convertBtn');
     const status = document.getElementById('status');
+    const bankIdInput = document.getElementById('bankId');
 
-    // 映射选择器
+    // Selectors
     const selTitle = document.getElementById('mapTitle');
     const selAnswer = document.getElementById('mapAnswer');
     const selAnalysis = document.getElementById('mapAnalysis');
     const selOptions = document.getElementById('mapOptions');
 
-    // 文件读取
+    // 默认生成一个随机的 Bank ID
+    window.onload = () => {
+        bankIdInput.value = 'BANK_' + Math.random().toString(36).substr(2, 6).toUpperCase();
+    };
+
     fileInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
         const data = await file.arrayBuffer();
-        workbook = XLSX.read(data);
+        wb = XLSX.read(data);
         
         renderSheets();
         refreshHeaders();
-        setup.style.display = 'block';
+        mainUI.style.display = 'block';
     });
 
-    // 渲染 Sheet 列表
     function renderSheets() {
         sheetList.innerHTML = '';
-        workbook.SheetNames.forEach(name => {
+        wb.SheetNames.forEach(name => {
             const div = document.createElement('div');
             div.className = 'sheet-item';
             div.innerHTML = `<input type="checkbox" value="${name}" checked onchange="refreshHeaders()"> ${name}`;
@@ -194,13 +228,12 @@
         });
     }
 
-    // 刷新合并后的表头（基于选中的 Sheet）
     function refreshHeaders() {
         const selected = Array.from(sheetList.querySelectorAll('input:checked')).map(i => i.value);
         const headerSet = new Set();
 
         selected.forEach(name => {
-            const sheet = workbook.Sheets[name];
+            const sheet = wb.Sheets[name];
             if (!sheet['!ref']) return;
             const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
             if (data.length > 0) {
@@ -211,32 +244,32 @@
         });
 
         const allHeaders = Array.from(headerSet);
-        const controls = [selTitle, selAnswer, selAnalysis, selOptions];
+        const ctrls = [selTitle, selAnswer, selAnalysis, selOptions];
         
-        controls.forEach(ctrl => {
-            const savedValues = Array.from(ctrl.selectedOptions).map(o => o.value);
+        ctrls.forEach(ctrl => {
+            const prev = Array.from(ctrl.selectedOptions).map(o => o.value);
             ctrl.innerHTML = '';
             allHeaders.forEach(h => {
                 const opt = document.createElement('option');
                 opt.value = h;
                 opt.textContent = h;
-                if (savedValues.includes(h)) opt.selected = true;
+                if (prev.includes(h)) opt.selected = true;
                 ctrl.appendChild(opt);
             });
         });
     }
 
-    // 安全获取单元格内容，保留“0”
-    function getCellString(val) {
-        if (val === 0 || val === "0") return "0";
-        if (!val) return "";
-        return val.toString().trim();
+    function getVal(v) {
+        if (v === 0 || v === "0") return "0";
+        if (!v) return "";
+        return v.toString().trim();
     }
 
-    // 核心转换逻辑
     convertBtn.addEventListener('click', () => {
-        const selectedSheets = Array.from(sheetList.querySelectorAll('input:checked')).map(i => i.value);
-        if (selectedSheets.length === 0) return alert('请至少选择一个工作表');
+        const selected = Array.from(sheetList.querySelectorAll('input:checked')).map(i => i.value);
+        if (selected.length === 0) return alert('请至少选择一个工作表');
+
+        const bankId = bankIdInput.value.trim() || 'UNDEFINED';
 
         const config = {
             title: selTitle.value,
@@ -245,62 +278,56 @@
             options: Array.from(selOptions.selectedOptions).map(o => o.value)
         };
 
-        if (!config.title || !config.answer) return alert('请确保已配置题目和答案的映射列');
+        if (!config.title || !config.answer) return alert('请确保映射了题目和答案列');
 
         const result = [];
-        // 生成基于当前时间的 ID 前缀 (36进制)
-        const idPrefix = Date.now().toString(36);
-        let counter = 1;
+        const timeKey = Date.now().toString(36);
+        let seq = 1;
 
-        selectedSheets.forEach(name => {
-            const sheet = workbook.Sheets[name];
-            const data = XLSX.utils.sheet_to_json(sheet);
+        selected.forEach(name => {
+            const sheet = wb.Sheets[name];
+            const rows = XLSX.utils.sheet_to_json(sheet);
 
-            data.forEach(row => {
-                const title = getCellString(row[config.title]);
-                if (!title) return; // 题目为空则跳过
+            rows.forEach(row => {
+                const title = getVal(row[config.title]);
+                if (!title) return;
 
-                // 处理答案：转大写
-                const rawAnswer = getCellString(row[config.answer]);
-                const finalAnswer = rawAnswer.toUpperCase();
+                const ansRaw = getVal(row[config.answer]);
+                const ansFinal = ansRaw.toUpperCase();
 
-                // 生成 ID: 前缀 + 序号 (36进制)
-                const finalId = idPrefix + counter.toString(36).padStart(3, '0');
+                   // ID: 时间前缀 + 序号
+                const qId = timeKey + seq.toString(36).padStart(3, '0');
 
                 const item = {
-                    id: finalId,
+                    id: qId,
+                    bank_id: bankId,
                     title: title,
-                    option: config.options.map(k => getCellString(row[k])).filter(v => v !== ""),
-                    answer: finalAnswer,
-                    analysis: getCellString(row[config.analysis])
+                    option: config.options.map(k => getVal(row[k])).filter(v => v !== ""),
+                    answer: ansFinal,
+                    analysis: getVal(row[config.analysis])
                 };
 
                 result.push(item);
-                counter++;
+                seq++;
             });
         });
 
-        if (result.length === 0) return alert('未提取到有效数据，请检查映射配置。');
+        if (result.length === 0) return alert('数据读取失败，请检查映射。');
 
-        saveJson(result);
-        
-        status.className = 'status active';
-        status.textContent = `成功！合并了 ${selectedSheets.length} 个表，共导出 ${result.length} 条题目。`;
-    });
-
-    function saveJson(data) {
-        const blob = new Blob([JSON.stringify(data, null, 4)], { type: 'application/json' });
+        const blob = new Blob([JSON.stringify(result, null, 4)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `quiz_data_${new Date().getTime().toString(36)}.json`;
+        a.download = `bank_export_${bankId}_${timeKey}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-    }
+
+        status.className = 'status active';
+        status.textContent = `成功！已完成 ${selected.length} 个表的合并，共处理 ${result.length} 条数据。`;
+    });
 </script>
 
 </body>
 </html>
-
